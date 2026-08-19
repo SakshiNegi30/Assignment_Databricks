@@ -78,16 +78,14 @@ FHIR API
 │ • Reporting-ready Delta tables                           │
 │ • Business-level aggregations                            │
 └──────────────────────────────────────────────────────────┘
-      │
-      ▼
-   Power BI
+
 ```
 
 ---
 
-## 1. Source — HAPI FHIR R4
+## 1. Source — FHIR API
 
-The pipeline consumes healthcare data from a **HAPI FHIR R4 API**.
+The pipeline consumes healthcare data from a **FHIR API**.
 
 The primary FHIR resources processed are:
 
@@ -357,8 +355,7 @@ Typed Silver Tables
 Joins + Aggregations
       ↓
 Gold Delta Tables
-      ↓
-Power BI
+
 ```
 
 ---
@@ -421,7 +418,7 @@ This provides centralized governance, permissions, and data discovery.
 
 | Component      | Technology                         |
 | -------------- | ---------------------------------- |
-| Healthcare API | HAPI FHIR R4                       |
+| Healthcare API | FHIR                    |
 | Cloud Platform | Microsoft Azure                    |
 | Processing     | Azure Databricks                   |
 | Storage        | Databricks Volumes / Cloud Storage |
@@ -429,7 +426,7 @@ This provides centralized governance, permissions, and data discovery.
 | Governance     | Unity Catalog                      |
 | Transformation | PySpark / Spark SQL                |
 | Architecture   | Medallion Architecture             |
-| Reporting      | Power BI                           |
+
 
 ---
 
@@ -466,8 +463,7 @@ BRONZE + SCD2
 SILVER
    ↓
 GOLD
-   ↓
-Power BI
+   
 ```
 
             
