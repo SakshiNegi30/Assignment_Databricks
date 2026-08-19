@@ -19,7 +19,7 @@ The design supports **incremental ingestion, pagination, historical tracking usi
 ## Architecture
 
 ```text
-FHIR API (HAPI R4)
+FHIR API 
       │
       │ Paginated GET
       │ Incremental using _lastUpdated
