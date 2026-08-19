@@ -16,7 +16,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./00_config
+# MAGIC %run ./utils_nb
 
 # COMMAND ----------
 

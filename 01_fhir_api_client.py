@@ -12,7 +12,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./00_config
+# MAGIC %run ./utils_nb
 
 # COMMAND ----------
 
@@ -92,6 +92,3 @@ def fetch_resource_pages(
 
 def count_entries(bundle: dict) -> int:
     return len(bundle.get("entry", []))
-
-# COMMAND ----------
-
