@@ -17,7 +17,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./00_config
+# MAGIC %run ./utils_nb
 
 # COMMAND ----------
 
@@ -47,7 +47,7 @@ for resource_type in resources:               # orchestration order enforced by 
             audit_rows.append(Row(
                 resource_type=resource_type,
                 batch_date=batch_date.isoformat(),
-                page_number=None,
+                page_number=2,
                 api_url_or_params=None,
                 extraction_timestamp=dt.datetime.utcnow().isoformat() + "Z",
                 save_timestamp=None,
@@ -79,93 +79,6 @@ for resource_type in resources:               # orchestration order enforced by 
 # Persist audit log (append-only) so every historical run stays queryable
 if audit_rows:
     from pyspark.sql.types import StructType, StructField, StringType, IntegerType
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     schema = StructType([
         StructField("resource_type", StringType(), False),

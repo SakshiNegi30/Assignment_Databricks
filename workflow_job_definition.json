@@ -1,0 +1,88 @@
+{
+  "name": "fhir_medallion_pipeline",
+  "tags": {
+    "project": "fhir-ingestion-assignment"
+  },
+  "parameters": [
+    { "name": "catalog", "default": "fhir_catalog" },
+    { "name": "start_date", "default": "" },
+    { "name": "end_date", "default": "" },
+    { "name": "resource_type", "default": "Patient,Encounter,Observation,Condition" }
+  ],
+  "job_clusters": [
+    {
+      "job_cluster_key": "fhir_pipeline_cluster",
+      "new_cluster": {
+        "spark_version": "14.3.x-scala2.12",
+        "node_type_id": "Standard_DS3_v2",
+        "num_workers": 1,
+        "data_security_mode": "SINGLE_USER"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "task_key": "setup_environment",
+      "job_cluster_key": "fhir_pipeline_cluster",
+      "notebook_task": {
+        "notebook_path": "/Assignment_Databricks/utils_nb",
+        "base_parameters": { "catalog": "{{job.parameters.catalog}}" }
+      }
+    },
+    {
+      "task_key": "raw_ingestion",
+      "depends_on": [{ "task_key": "setup_environment" }],
+      "job_cluster_key": "fhir_pipeline_cluster",
+      "notebook_task": {
+        "notebook_path": "/Assignment_Databricks/02_Raw_Ingestion",
+        "base_parameters": {
+          "catalog": "{{job.parameters.catalog}}",
+          "start_date": "{{job.parameters.start_date}}",
+          "end_date": "{{job.parameters.end_date}}",
+          "resource_type": "{{job.parameters.resource_type}}"
+        }
+      },
+      "notes": "Orchestrates API calls in Patient -> Encounter -> Observation -> Condition order internally (see resolve_resource_list in 00_config)."
+    },
+    {
+      "task_key": "bronze_layer",
+      "depends_on": [{ "task_key": "raw_ingestion" }],
+      "job_cluster_key": "fhir_pipeline_cluster",
+      "notebook_task": {
+        "notebook_path": "/Assignment_Databricks/03_Bronze_Layer",
+        "base_parameters": {
+          "catalog": "{{job.parameters.catalog}}",
+          "start_date": "{{job.parameters.start_date}}",
+          "end_date": "{{job.parameters.end_date}}",
+          "resource_type": "{{job.parameters.resource_type}}"
+        }
+      }
+    },
+    {
+      "task_key": "silver_layer",
+      "depends_on": [{ "task_key": "bronze_layer" }],
+      "job_cluster_key": "fhir_pipeline_cluster",
+      "notebook_task": {
+        "notebook_path": "/Assignment_Databricks/04_Silver_Layer",
+        "base_parameters": {
+          "catalog": "{{job.parameters.catalog}}",
+          "resource_type": "{{job.parameters.resource_type}}"
+        }
+      }
+    },
+    {
+      "task_key": "gold_layer",
+      "depends_on": [{ "task_key": "silver_layer" }],
+      "job_cluster_key": "fhir_pipeline_cluster",
+      "notebook_task": {
+        "notebook_path": "/Assignment_Databricks/05_Gold_Layer",
+        "base_parameters": { "catalog": "{{job.parameters.catalog}}" }
+      }
+    }
+  ],
+  "schedule": {
+    "quartz_cron_expression": "0 0 3 * * ?",
+    "timezone_id": "Asia/Kolkata",
+    "pause_status": "PAUSED"
+  }
+}
