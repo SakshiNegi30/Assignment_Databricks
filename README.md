@@ -2,6 +2,7 @@
 
 Architecture 
 
+
 FHIR API
       │  paginated GET, incremental via _lastUpdated
       ▼
